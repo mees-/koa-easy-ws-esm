@@ -1,6 +1,6 @@
 {
   "name": "@mees-/koa-easy-ws-esm",
-  "version": "3.1.0",
+  "version": "3.1.1",
   "description": "Simple Koa middleware for websocket handling",
   "type": "module",
   "exports": {
