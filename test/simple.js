@@ -2,14 +2,16 @@
 
 // sorry for the mess, there has to be a cleaner way
 
-const debug = require('debug')('koa-easy-ws:test')
-const { expect } = require('chai')
-const http = require('http')
-const Koa = require('koa')
-const request = require('request-promise')
-const WebSocket = require('ws')
+import makeDebug from 'debug'
+import { expect } from 'chai'
+import http from 'node:http'
+import Koa from 'koa'
+import request from 'request-promise'
+import WebSocket from 'ws'
 
-const websocket = require('..')
+import websocket from '../index.js'
+
+const debug = makeDebug('koa-websocket:test')
 
 const app = new Koa()
 
@@ -54,7 +56,7 @@ describe('simple example', function () {
       debug("running test 'simple/websocket'")
       const ws = new WebSocket(`ws://${address}`)
 
-      ws.on('message', (data) => {
+      ws.on('message', data => {
         expect(data.toString('utf8')).to.equal('hello there')
         ws.close()
         resolve()

@@ -2,13 +2,15 @@
 
 // sorry for the mess, there has to be a cleaner way
 
-const debug = require('debug')('koa-easy-ws:test')
-const { expect } = require('chai')
-const http = require('http')
-const Koa = require('koa')
-const WebSocket = require('ws')
+import makeDebug from 'debug'
+import { expect } from 'chai'
+import http from 'node:http'
+import Koa from 'koa'
+import WebSocket from 'ws'
 
-const websocket = require('..')
+import websocket from '../index.js'
+
+const debug = makeDebug('koa-websocket:test')
 
 const app = new Koa()
 
@@ -56,7 +58,7 @@ describe('renamed property', function () {
       debug("running test 'renamed/sidious'")
       const ws = new WebSocket(`ws://${address}/sidious`)
 
-      ws.once('message', (data) => {
+      ws.once('message', data => {
         expect(data.toString('utf8')).to.equal('this is getting out of hand')
         ws.close()
         resolve()
@@ -69,7 +71,7 @@ describe('renamed property', function () {
       debug("running test 'renamed/maul'")
       const ws = new WebSocket(`ws://${address}/maul`)
 
-      ws.once('message', (data) => {
+      ws.once('message', data => {
         expect(data.toString('utf8')).to.equal('now there are two of them')
         ws.close()
         resolve()

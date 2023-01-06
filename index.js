@@ -1,7 +1,7 @@
 import makeDebug from 'debug'
 import http from 'node:http'
 import process from 'node:process'
-import WebSocket from 'ws'
+import { WebSocketServer } from 'ws'
 
 const debug = makeDebug('koa-easy-ws')
 
@@ -34,7 +34,7 @@ function createWebsocketMiddleware (propertyName = 'ws', options) {
   }
 
   debug(`websocket middleware created with property name '${propertyName}'`)
-  const wss = new WebSocket.Server({ ...options.wsOptions, noServer: true })
+  const wss = new WebSocketServer({ ...options.wsOptions, noServer: true })
 
   const websocketMiddleware = async (ctx, next) => {
     debug(`websocket middleware called on route ${ctx.path}`)

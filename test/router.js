@@ -2,14 +2,16 @@
 
 // sorry for the mess, there has to be a cleaner way
 
-const debug = require('debug')('koa-easy-ws:test')
-const { expect } = require('chai')
-const http = require('http')
-const Koa = require('koa')
-const Router = require('koa-router')
-const WebSocket = require('ws')
+import makeDebug from 'debug'
+import { expect } from 'chai'
+import http from 'node:http'
+import Koa from 'koa'
+import Router from 'koa-router'
+import WebSocket from 'ws'
 
-const websocket = require('..')
+import websocket from '../index.js'
+
+const debug = makeDebug('koa-websocket:test')
 
 const app = new Koa()
 const router = new Router()
@@ -17,10 +19,7 @@ const router = new Router()
 const server = http.createServer(app.callback())
 let address // forgive my mutant heresy
 
-app
-  .use(websocket('ws', { server }))
-  .use(router.routes())
-  .use(router.allowedMethods())
+app.use(websocket('ws', { server })).use(router.routes()).use(router.allowedMethods())
 
 router.get('/pow/obi', async (ctx, next) => {
   if (ctx.ws) {
@@ -61,7 +60,7 @@ describe('composing with router', function () {
       debug("running test 'router/obi'")
       const ws = new WebSocket(`ws://${address}/pow/obi`)
 
-      ws.once('message', (data) => {
+      ws.once('message', data => {
         expect(data.toString('utf8')).to.equal('chancellor palpatine is evil')
         ws.close()
         resolve()
@@ -74,7 +73,7 @@ describe('composing with router', function () {
       debug("running test 'router/ani'")
       const ws = new WebSocket(`ws://${address}/pow/ani`)
 
-      ws.once('message', (data) => {
+      ws.once('message', data => {
         expect(data.toString('utf8')).to.equal('the jedi are evil')
         ws.close()
         resolve()

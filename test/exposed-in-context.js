@@ -1,12 +1,14 @@
 /* eslint-env mocha */
 
-const debug = require('debug')('koa-easy-ws:test')
-const { expect } = require('chai')
-const http = require('http')
-const Koa = require('koa')
-const WebSocket = require('ws')
+import makeDebug from 'debug'
+import { expect } from 'chai'
+import http from 'node:http'
+import Koa from 'koa'
+import WebSocket, { WebSocketServer } from 'ws'
 
-const websocket = require('..')
+import websocket from '../index.js'
+
+const debug = makeDebug('koa-websocket:test')
 
 const app = new Koa()
 
@@ -18,7 +20,7 @@ app.use(async (ctx, next) => {
   if (ctx.ws) {
     const ws = await ctx.ws()
 
-    return ws.send(ctx.wss instanceof WebSocket.Server ? 'valid' : 'invalid')
+    return ws.send(ctx.wss instanceof WebSocketServer ? 'valid' : 'invalid')
   }
 
   ctx.body = 'websocket pls'
@@ -48,7 +50,7 @@ describe('exposed server in context', function () {
       debug("running test 'exposed-in-context'")
       const ws = new WebSocket(`ws://${address}`)
 
-      ws.on('message', (data) => {
+      ws.on('message', data => {
         expect(data.toString('utf8')).to.equal('valid')
         ws.close()
         resolve()
